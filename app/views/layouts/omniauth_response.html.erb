@@ -8,7 +8,7 @@
             ie11    = !!navigator.userAgent.match(/Trident.*rv\:11\./);
         return !(ieLTE10 || ie11);
       }
-      if (usingExternalWindow()) {
+      if (true || usingExternalWindow()) {
         var getCredentials = function(){
           return {
             message: "deliverCredentials", // required
