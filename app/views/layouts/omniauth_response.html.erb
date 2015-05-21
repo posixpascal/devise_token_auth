@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      var usingExternalWindow = function() {
+        var nav     = navigator.userAgent.toLowerCase(),
+            ieLTE10 = (nav && nav.indexOf('msie') != -1),
+            ie11    = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+        return !(ieLTE10 || ie11);
+      }
+      if (usingExternalWindow()) {
+        var getCredentials = function(){
+          return {
+            message: "deliverCredentials", // required
+            auth_token: '<%= @user.authentication_token %>', // required
+            uid: '<%= @user.uid %>', // required
+            data: <%= raw UserSerializer.new(@user, root: false).to_json %>
+          };
+        };
+        window.addEventListener("message", function(ev) {
+          if (ev.data === "requestCredentials") {
+           /* ev.source.postMessage({
+              <%= yield %>
+            }, '*');*/
+            ev.source.postMessage(getCredentails(), "*");
+            window.close();
+          }
+        });
+      } else {
+        window.location.href = "<%= @auth_origin_url %>";
+      }
+    </script>
+  </head>
+  <body>
+    <pre>
+      Redirecting...
+    </pre>
+  </body>
+</html>
